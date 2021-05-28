@@ -4,9 +4,25 @@
   <title>ckunte.net</title>
   <link href="https://ckunte.net" />
   <link rel="self" href="https://ckunte.net/rss.xml" />
-  <updated>2021-05-09T09:39:00+08:00</updated>
+  <updated>2021-05-28T19:43:00+08:00</updated>
   <id>https://ckunte.net/rss.xml</id>
   
+  <entry>
+    <title>Blur</title>
+    <link href="https://ckunte.net/w#1622202180" />
+    <id>https://ckunte.net/w#1622202180</id>
+    <updated>2021-05-28T19:43:00+08:00</updated>
+    <author>
+      <name>C Kunte</name>
+      <uri>https://ckunte.net/</uri>
+    </author>
+    <content type="html" xml:base="https://ckunte.net" xml:lang="en">
+    &lt;p&gt;Another death. My cousin widowed, and their five year old orphaned. I was at their engagement fourteen years ago. &lt;/p&gt;
+    &lt;p&gt;The animal is tired. The mind does not know how to react. Instead, it chooses to work &amp;mdash; to power through deliverables, code, models, and computations. Arms, legs, and the back ache hesitatingly, can&amp;rsquo;t be sure if it is the inside temperature. The body has its way of dealing with things. In between, there&amp;rsquo;s me.&lt;/p&gt;
+    &lt;p&gt;We watched &lt;a href=&#34;https://en.wikipedia.org/wiki/Tehran_(TV_series)&#34; title=&#34;Tehran (TV series) - Wikipedia&#34;&gt;Tehran&lt;/a&gt; this week. Wife and I both liked. It was part cultural experience, and part curiosity.&lt;/p&gt;
+    </content>
+  </entry>
+
   <entry>
     <title>Tai chi</title>
     <link href="https://ckunte.net/w#1620524340" />
@@ -49,22 +65,6 @@
     &lt;/li&gt;
     &lt;/ol&gt;
     &lt;/div&gt;
-    </content>
-  </entry>
-
-  <entry>
-    <title>The grim second wave</title>
-    <link href="https://ckunte.net/w#1619167260" />
-    <id>https://ckunte.net/w#1619167260</id>
-    <updated>2021-04-23T16:41:00+08:00</updated>
-    <author>
-      <name>C Kunte</name>
-      <uri>https://ckunte.net/</uri>
-    </author>
-    <content type="html" xml:base="https://ckunte.net" xml:lang="en">
-    &lt;p&gt;As I read NYT&amp;rsquo;s article, &lt;a href=&#34;https://www.nytimes.com/2021/04/21/world/asia/india-coronavirus-oxygen.html&#34; title=&#34;Accident at Covid Hospital in India Kills at Least 22 as Cases Surge - The New York Times&#34;&gt;India&amp;rsquo;s health system cracks under the strain as coronavirus cases surge&lt;/a&gt;, I am struck by the comments therein. My retired old parents living in India are dealing with &lt;a href=&#34;https://daringfireball.net/linked/2021/04/22/india-covid-hell&#34;&gt;India&amp;rsquo;s descent into COVID hell&lt;/a&gt; mostly on their own.&lt;/p&gt;
-    &lt;p&gt;Perth is going into &lt;a href=&#34;https://www.abc.net.au/news/2021-04-23/perth-plunged-into-three-day-lockdown-after-hotel-covid/100091188&#34; title=&#34;Perth and Peel plunged into three-day lockdown after quarantine hotel COVID transmission - ABC News&#34;&gt;a lock-down for three days&lt;/a&gt; mid-night onward with masks-on from 6pm, 23 April. That&amp;rsquo;s the weekend + ANZAC day.&lt;/p&gt;
-    &lt;p&gt;This site is now between a tweet and a tumbl.&lt;/p&gt;
     </content>
   </entry>
 
