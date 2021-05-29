@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+  <title>ckunte.net: TLP</title>
+  <meta name="description" content="An overview of tension leg platforms to-date." />
+  <meta name="author" content="Chetan Kunte" />
+  <link rel="apple-touch-icon-precomposed" href="/img/apple-touch-icon.png" />
+  <link rel="canonical" href="/2018/tlp" />
+  <link rel="stylesheet" href="/css/plain.css" type="text/css" />
+<script src="/css/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+  <!-- The loading of KaTeX is deferred to speed up page rendering -->
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous"></script>
+  <!-- To automatically render math in text elements, include the auto-render extension: -->
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+</head>
+<body>
+  <main>
+<header>
+  <a accesskey="/" href="/"><img alt="/" class="logo" src="/img/apple-touch-icon.png" width="64" height="64"></a>
+</header>
+  
+  
+  <article>
+  	<h1>TLP</h1>
+  	<time datetime="2018-01-07 23:06">January 7, 2018</time>
+  	<p>While recuperating from an injury, I scoured the internet for info. on <a href="https://en.wikipedia.org/wiki/Tension-leg_platform" title="Tension-leg platform">TLPs</a> at the behest of a colleague &mdash; anything to distract myself from the pain. By Friday, I was able to assemble <a href="https://gist.githubusercontent.com/ckunte/b0a204548a2ca72a0771bcc834a947dd/" title="TLPs">a list</a>. Here&rsquo;s a summary.<sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup></p>
+<figure>
+  <img class="fig" alt="Overview of a tension leg platform" src="/img/tlp.jpg">
+  <figcaption>Figure 1: Overview of a tension leg platform. Courtesy: N.D.P. Barltrop, Floating Structures: a guide for design and Analysis, Volume One.</figcaption>
+</figure>
+<figure>
+  <img class="fig" alt="Tension leg platforms" src="/img/tlp.png" loading="lazy">
+  <figcaption>Figure 2: Tension leg platforms statistics: Water depth to topsides weight (left), and Displacement to topsides weight (right).</figcaption>
+</figure>
+
+<p>It is interesting to note that the largest TLPs, viz., <em>Snorre A</em> and <em>Heidrun</em> are both owned by <em>Statoil</em>. In terms of weights and displacements, these two are literally off the chart when compared with the rest &mdash; an incredible feat.</p>
+<pre><code class="language-python">#!/usr/bin/env python
+# -*- coding: UTF-8 -*-
+&quot;&quot;&quot;
+tlpscatter.py -- 2018 ckunte
+&quot;&quot;&quot;
+import numpy as np
+import matplotlib.pyplot as plt
+import urllib2
+URL = 'https://gist.githubusercontent.com/ckunte/b0a204548a2ca72a0771bcc834a947dd/raw/9cf611e4ee31fd2d2cecee4cedc4f46a08ebe85e'
+
+tlpdata = np.loadtxt(urllib2.urlopen(URL), dtype='int,int,int', \
+    delimiter=',', usecols=(2, 3, 4), \
+    unpack=True, skiprows=1)
+
+def disp_weight(disp, topside):
+    plt.scatter(disp, topside, c='blue', alpha=0.45)
+    plt.xlabel('Displacement (t)')
+    plotopt()
+    plt.savefig('tlp_disp_weight.png')
+    plt.close()
+
+def depth_weight(depth, topside):
+    plt.scatter(depth, topside, c='red', alpha=0.45)
+    plt.xlabel('Water depth (m)')
+    plotopt()
+    plt.savefig('tlp_depth_weight.png')
+    plt.close()
+
+def plotopt():
+    plt.ylabel('Topside weght (t)')
+    plt.xlim(xmin=0)
+    plt.ylim(ymin=0)
+    plt.grid()
+
+def main():
+    disp_weight(tlpdata[0], tlpdata[1])
+    depth_weight(tlpdata[2], tlpdata[1])
+    pass
+
+if __name__ == '__main__':
+    main()
+</code></pre>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:1">
+<p>There may be a few more than listed; I just don&rsquo;t have enough info. without going through paid subscriptions like WoodMac.&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+  </article>
+  
+      <footer>
+        <span><a accesskey="j" title="Typhoon Melor" href="/2017/melor">&larr; Prev</a></span>
+        <span><a accesskey="k" title="Reliability" href="/2018/reliability">Next &rarr;</a></span>
+      </footer>
+
+  </main>
+</body>
+</html>

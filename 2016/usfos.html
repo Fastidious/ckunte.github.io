@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+  <title>ckunte.net: USFOS on linux</title>
+  <meta name="description" content="Getting USFOS to run on linux is pretty breezy. Try?" />
+  <meta name="author" content="Chetan Kunte" />
+  <link rel="apple-touch-icon-precomposed" href="/img/apple-touch-icon.png" />
+  <link rel="canonical" href="/2016/usfos" />
+  <link rel="stylesheet" href="/css/plain.css" type="text/css" />
+<script src="/css/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+  <!-- The loading of KaTeX is deferred to speed up page rendering -->
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous"></script>
+  <!-- To automatically render math in text elements, include the auto-render extension: -->
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+</head>
+<body>
+  <main>
+<header>
+  <a accesskey="/" href="/"><img alt="/" class="logo" src="/img/apple-touch-icon.png" width="64" height="64"></a>
+</header>
+  
+  
+  <article>
+  	<h1>USFOS on linux</h1>
+  	<time datetime="2016-03-12 21:09">March 12, 2016</time>
+  	<p>As a commercial (engineering) software, <a href="http://usfos.com/" title="Computer program for performing non-linear static and dynamic analysis of space frame structures">USFOS</a> needs to be manually installed. I tried this today on <a href="https://elementary.io/" title="elementary OS">elementary OS</a>, powered by frugal hardware, and USFOS runs just fine. At minimum, the following are needed:</p>
+<ol>
+<li><code>usfos</code>, <code>xact</code> binary, and <code>usfos_etc</code> files.</li>
+<li>A valid license <code>usfos.key</code> file.</li>
+<li>A computer with Linux 64-bit OS to run on.</li>
+</ol>
+<p>As each binary needs to be separately downloaded from USFOS site, I’ve automated this via <a href="https://www.gnu.org/software/wget/">wget</a>. Here are the commands to run in a terminal (or copy-paste the whole block in to a install.sh file and run it at commandline like so: <code>bash ./install.sh</code>):</p>
+<pre><code>#!/usr/bin/env bash
+# 2020 ckunte
+
+# Create ~/usfos/bin folder
+mkdir -p $HOME/usfos/bin
+
+# Download USFOS etc archive
+wget http://www.usfos.no/download/Linux/files/usfos_etc.tgz -P $HOME/usfos/
+
+# Extract USFOS etc archive to ~/usfos/etc
+tar zxvf $HOME/usfos/usfos_etc.tgz -C $HOME/usfos/
+
+# Download USFOS binary files
+wget -i https://gist.githubusercontent.com/ckunte/7836a10f5d418799a8ea/raw/a84df4d072683aa6bd3d513400f2d54aadefe363/downloadlist.txt -P $HOME/usfos/bin/
+
+# Extract USFOS binary files
+gunzip $HOME/usfos/bin/*.gz
+
+# Make USFOS binary files executable
+chmod +x $HOME/usfos/bin/*
+</code></pre>
+<p>The last line above makes downloaded files executable. Add <code>usfos</code> commands to <code>PATH</code>, so they can be accessible from a working folder. This following is to be added to <code>~/.bashrc</code> (in my case, <code>~/.zshrc</code>, since I use zsh as my shell):</p>
+<pre><code>export PATH=$HOME/usfos/bin:$PATH
+export USFOS_HOME=$HOME/usfos
+</code></pre>
+<p>Reload <code>.bashrc</code> with the command in terminal:</p>
+<pre><code>. ~/.bashrc
+</code></pre>
+<p>Run <code>xact &amp;</code> from terminal to load the familiar UI as below:</p>
+<figure>
+  <img alt="USFOS on linux." src="/img/usfos-linux.png" loading="lazy">
+  <figcaption>USFOS on linux.</figcaption>
+</figure>
+
+<p>Place a valid license key, <code>usfos.key</code>, in <code>~/usfos/etc</code> folder &mdash; this is required to perform analysis. (USFOS team is kind enough to make model and results viewer <em>not</em> depend on the license key.) <a href="http://www.usfos.no/manuals/">Docs</a> and <a href="http://www.usfos.no/examples/usfos/">examples</a> may be separately downloaded &mdash; as required.</p>
+  </article>
+  
+      <footer>
+        <span><a accesskey="j" title="Offshore crane" href="/2016/crane">&larr; Prev</a></span>
+        <span><a accesskey="k" title="Berthing fenders" href="/2016/fenders">Next &rarr;</a></span>
+      </footer>
+
+  </main>
+</body>
+</html>

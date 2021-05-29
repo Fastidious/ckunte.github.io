@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+  <title>ckunte.net: Storm safety</title>
+  <meta name="description" content="The probability of encountering a design wave for jacket on-bottom." />
+  <meta name="author" content="Chetan Kunte" />
+  <link rel="apple-touch-icon-precomposed" href="/img/apple-touch-icon.png" />
+  <link rel="canonical" href="/2021/storm-safety" />
+  <link rel="stylesheet" href="/css/plain.css" type="text/css" />
+<script src="/css/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+  <!-- The loading of KaTeX is deferred to speed up page rendering -->
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous"></script>
+  <!-- To automatically render math in text elements, include the auto-render extension: -->
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+</head>
+<body>
+  <main>
+<header>
+  <a accesskey="/" href="/"><img alt="/" class="logo" src="/img/apple-touch-icon.png" width="64" height="64"></a>
+</header>
+  
+  
+  <article>
+  	<h1>Storm safety</h1>
+  	<time datetime="2021-01-17 20:14">January 17, 2021</time>
+  	<p>Jacket resting on its bottom remains exposed to oncoming waves in its pre and partially piled states during installation. In these states, it is susceptible to sliding and overturning from environmental actions. It is deemed storm-safe when secured with sufficient number of piles to withstand installation wave environment.</p>
+<p>There is a prevalent practice in the industry where jackets on-bottom are commonly assessed for stability by applying 1-year return period environment. This is because piling in well-understood soils takes days (not weeks or months) to complete. As a result, the probability (p) of encountering a design wave within piling duration is sufficiently low. </p>
+<p>The probability of encountering a design wave during piling is given by:</p>
+<p>$$ p = 1 - e^{(-\frac{L}{T})} $$</p>
+<p>where, </p>
+<ul>
+<li>L &ndash; piling duration</li>
+<li>T &ndash; return period of design wave</li>
+</ul>
+<figure>
+  <img alt="Figure 1: The probability of encountering a design wave during piling." class="fig" src="/img/ep.svg">
+  <figcaption>Figure 1: The probability of encountering a design wave during piling.</figcaption>
+</figure>
+
+<p>As Figure 1 illustrates, increase in piling duration increases the chance of encountering a design wave non-linearly. And so the best way to lower <em>p</em> is to design the jacket to withstand wave environment with higher return periods, especially if piling duration to achieve storm safety cannot be reduced.</p>
+<p>We experienced this issue first-hand in 2019, as our piling durations were expected to be unconventionally long, and we were able to steer the criteria for design in time towards storm-safety.</p>
+<pre><code class="language-python">#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+&quot;&quot;&quot;
+ep.py -- Probability of encountering a design wave during piling
+2019 ckunte
+&quot;&quot;&quot;
+import numpy as np
+import matplotlib.pyplot as plt
+
+
+def plot_encounter_probability(L, T, lbl):
+    for i, j in zip(L, lbl):
+        p = (1 - np.exp(-i / T)) * 100  # in %
+        plt.semilogx(T, p, label=j + &quot; piling&quot;)
+        pass
+    plt.xlabel(&quot;Return period, T (years)&quot;)
+    plt.ylabel(&quot;Probability of encountering design wave, p (%)&quot;)
+    plt.legend(loc=0)
+    plt.savefig(&quot;ep.svg&quot;)
+    plt.close()
+    pass
+
+
+if __name__ == &quot;__main__&quot;:
+    lbl = [&quot;10 day&quot;, &quot;1 month&quot;, &quot;2 month&quot;, &quot;3 month&quot;, &quot;4 month&quot;, &quot;6 month&quot;]
+    L = [0.027, 0.083, 0.167, 0.250, 0.333, 0.500] # in years
+    T = np.arange(1.0, 50.0, 0.1)
+    plot_encounter_probability(L, T, lbl)
+    pass
+</code></pre>
+  </article>
+  
+      <footer>
+        <span><a accesskey="j" title="TSA for pile welds?" href="/2020/tsa-pilewelds">&larr; Prev</a></span>
+        <span><a accesskey="k" title="Release notes" href="/2021/rel">Next &rarr;</a></span>
+      </footer>
+
+  </main>
+</body>
+</html>

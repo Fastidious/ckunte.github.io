@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+  <title>ckunte.net: Hacked beam</title>
+  <meta name="description" content="It&#39;s like hacking a few toes to force-fit a new shoe." />
+  <meta name="author" content="Chetan Kunte" />
+  <link rel="apple-touch-icon-precomposed" href="/img/apple-touch-icon.png" />
+  <link rel="canonical" href="/2014/beam" />
+  <link rel="stylesheet" href="/css/plain.css" type="text/css" />
+<script src="/css/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+  <!-- The loading of KaTeX is deferred to speed up page rendering -->
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous"></script>
+  <!-- To automatically render math in text elements, include the auto-render extension: -->
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+</head>
+<body>
+  <main>
+<header>
+  <a accesskey="/" href="/"><img alt="/" class="logo" src="/img/apple-touch-icon.png" width="64" height="64"></a>
+</header>
+  
+  
+  <article>
+  	<h1>Hacked beam</h1>
+  	<time datetime="2014-06-06 20:23">June 6, 2014</time>
+  	<figure>
+  <img alt="Unauthorised cut beam" src="/img/hbeam1.jpg">
+  <figcaption>Now, isn't that a beauty?</figcaption>
+</figure>
+
+<p>Problems like these are not uncommon in the field, and they often go unnoticed. This is a case of an unauthorized surgery on a prismatic section &mdash; likely by a contractor, amputating the bottom flange, sinking some teeth in to the web even, to make way for pipework and its flange assembly. It&rsquo;s like hacking a few toes in order to force-fit a new shoe. Introducing needless stress discontinuities in load carrying structural elements like these drive engineers up the wall.</p>
+<p>I modelled the beam with a crude section of the cut-out at an approximate location identified, and performed an analysis to determine at what global load it would begin yielding. (The tool uses <a href="http://en.wikipedia.org/wiki/Finite_strain_theory#Finite_strain_tensors">Green strain</a> deformation mechanics.)</p>
+<figure>
+  <img alt="Progressive stress checking this sucker in USFOS." class="fig" src="/img/hbeam2.gif" loading="lazy">
+  <figcaption>Progressive stress checking this sucker in USFOS.</figcaption>
+</figure>
+
+<p>Steel is forgiving. The beam in question fortunately isn&rsquo;t safety critical, and it turns out that it is capable of nearly twice the load it was designed to carry in its elasto-plastic capacity. (Plastic hinge forms at about four times the initial applied global load in the cut section.)</p>
+  </article>
+  
+      <footer>
+        <span><a accesskey="j" title="Tow" href="/2013/tow">&larr; Prev</a></span>
+        <span><a accesskey="k" title="S-N curves" href="/2014/sn-curves">Next &rarr;</a></span>
+      </footer>
+
+  </main>
+</body>
+</html>

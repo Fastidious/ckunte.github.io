@@ -1,1 +1,7 @@
+.robots.txt.swp
+.sass-cache/
+.sass-cache/*
+css/vanilla.css.map
 .DS_Store
+vanilla_404.html
+/log*

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+  <title>ckunte.net: Hotkeys</title>
+  <meta name="description" content="If only to protect my tactile memory, no matter the OS." />
+  <meta name="author" content="Chetan Kunte" />
+  <link rel="apple-touch-icon-precomposed" href="/img/apple-touch-icon.png" />
+  <link rel="canonical" href="/2017/ahk" />
+  <link rel="stylesheet" href="/css/plain.css" type="text/css" />
+<script src="/css/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+  <!-- The loading of KaTeX is deferred to speed up page rendering -->
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous"></script>
+  <!-- To automatically render math in text elements, include the auto-render extension: -->
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+</head>
+<body>
+  <main>
+<header>
+  <a accesskey="/" href="/"><img alt="/" class="logo" src="/img/apple-touch-icon.png" width="64" height="64"></a>
+</header>
+  
+  
+  <article>
+  	<h1>Hotkeys</h1>
+  	<time datetime="2017-05-18 20:11">May 18, 2017</time>
+  	<p>Three months ago, I began using my Logitech G610 keyboard at work to avoid managing KVM hygiene everyday &mdash; side-effect of a hot-desking policy. It is a fine, if hefty, full-sized keyboard, and that became a problem. I mean at the end of every work day, I&rsquo;d unplug to shove it inside a 1&rsquo;-0&rdquo;&times;1&rsquo;-0&rdquo; locker, leaving very little usable room for anything else.</p>
+<p>Not wanting to buy yet another, I pulled my seldom-used Apple bluetooth wireless keyboard out. This in many ways is worse than its large, corded sibling. For the portability you inherit its handicap of missing keys &mdash; some of them critical to be productive; this aside from the prospect of blowing one&rsquo;s mind with jumbled hotkeys across OSes &mdash; Mac at home; Windows at work.</p>
+<p>To recover sanity, I looked at ways to remap keys so I could use Mac hotkeys on Windows, and found <a href="https://autohotkey.com/" title="AutoHotkey">AutoHotkey</a> promising. As a general scripting tool, however, there is no way around the manual, and it so took me a good few trial and error compiles to get to a set of <a href="https://github.com/ckunte/mackeyboard" title="ckunte/mackeyboard: Mac keyboard to Windows key mappings">usable hotkey mappings</a>. I then compiled <em>mackeyboard.ahk</em> script together with a &#x2318; key icon to generate <em>mackeyboard.exe</em> file.</p>
+<p>It runs just fine in the background capturing all my hotkeys pressed in Mac-style and transforming them into Windows hotkeys on the fly. </p>
+<h2>Text expansion</h2>
+<p>Not to be done with hotkeys, it also works great as a text expander, saving me some repetitive typing. Here is an example. </p>
+<figure>
+  <img alt="Custom preamble is prepared in a reply email using sender's firstname for salutation when I hit the key combination Alt + x after selecting a message in my Inbox" class="fig" src="/img/outlook-ahk.gif" loading="lazy">
+  <figcaption>Custom preamble is prepared in a reply email using sender's firstname for salutation when I hit the key combination <kbd>Alt</kbd> + <kbd>x</kbd> after selecting a message in my Inbox.</figcaption>
+</figure>
+
+<p>The AutoHotkey code I use to auto-produce the above is as follows.</p>
+<pre><code>; In Microsoft Outlook only
+#IfWinActive ahk_class rctrl_renwnd32
+
+!x::
+ol := COMObjActive("Outlook.Application").ActiveExplorer.Selection.Item(1)
+From := ol.SenderName
+StringGetPos, pos, From, `,
+if errorlevel
+{
+    StringGetPos, pos, From, %A_Space%
+    StringLeft, From, From, pos
+}
+else
+{
+    StringTrimLeft, From, From, pos+2
+}
+StringUpper From, From, T
+FirstName := RegExReplace(From, " .*", "")
+SendInput, ^+r
+Sleep, 100
+SendInput, Hi %FirstName%, {Enter 2}Thank you for your email.{Enter 2}
+Return
+
+#IfWinActive
+</code></pre>
+<p>The <code>IfWinActive</code> enclosure ensures that this hotkey (<kbd>Alt</kbd> + <kbd>x</kbd>) is only triggered when Microsoft Outlook is the active window. This is enabled by <code>ahk_class</code>, which for Microsoft Outlook happens to be <code>rctrl_renwnd32</code>. Since I began working on this afresh, I had to figure out the application class for AutoHotkey to work. I have <a href="https://github.com/ckunte/mackeyboard" title="ckunte/mackeyboard: Mac keyboard to Windows key mappings">identified</a> a few for some common applications. There are a few nuggets like these in the repository. Do check them out.</p>
+<p>Digressing into Mac territory, it&rsquo;s a lot easier to do this above in Apple Mail with <a href="https://textexpander.com/" title="TextExpander – Productivity App">TextExpander</a> app together with a sprinkling of AppleScript and a text expansion trigger.</p>
+<figure>
+  <img alt="Custom preamble is prepared in a reply email using sender's firstname for salutation when I hit `;re` text expansion trigger" class="fig" src="/img/mail-autoreply.gif" loading="lazy">
+  <figcaption>Custom preamble is prepared in a reply email using sender's firstname for salutation when I hit `;re` text expansion trigger</figcaption>
+</figure>
+
+<pre><code>tell application "Mail"
+    set selected to selection
+    set msg to item 1 of selected
+    set sentBy to (sender of msg)
+    "Hi " &amp; word 1 of sentBy &amp; ",\n\nThank you for your email."
+end tell
+</code></pre>
+  </article>
+  
+      <footer>
+        <span><a accesskey="j" title="End releases" href="/2016/relconv">&larr; Prev</a></span>
+        <span><a accesskey="k" title="Typhoon Melor" href="/2017/melor">Next &rarr;</a></span>
+      </footer>
+
+  </main>
+</body>
+</html>

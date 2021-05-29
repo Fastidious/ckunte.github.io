@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+  <title>ckunte.net: SACS syntax in ST3</title>
+  <meta name="description" content="Syntax highlighting SACS input files in Sublime Text." />
+  <meta name="author" content="Chetan Kunte" />
+  <link rel="apple-touch-icon-precomposed" href="/img/apple-touch-icon.png" />
+  <link rel="canonical" href="/2020/sacs_st" />
+  <link rel="stylesheet" href="/css/plain.css" type="text/css" />
+<script src="/css/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+  <!-- The loading of KaTeX is deferred to speed up page rendering -->
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous"></script>
+  <!-- To automatically render math in text elements, include the auto-render extension: -->
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+</head>
+<body>
+  <main>
+<header>
+  <a accesskey="/" href="/"><img alt="/" class="logo" src="/img/apple-touch-icon.png" width="64" height="64"></a>
+</header>
+  
+  
+  <article>
+  	<h1>SACS syntax in ST3</h1>
+  	<time datetime="2020-11-01 10:38">November 1, 2020</time>
+  	<p>Bentley&rsquo;s <a href="https://www.bentley.com/en/products/brands/sacs">SACS</a> is the other suite I often use at work. So in the <a href="/2020/ust" title="USFOS syntax in ST3">tradition</a> of improving one&rsquo;s own work environment, I extended syntax-highlighting for SACS input files with this public repository <a href="https://github.com/ckunte/sacs_st" title="SACS syntax for Sublime Text">sacs_st</a>. Here is a view of a couple of files syntax-highlighted in <a href="https://www.sublimetext.com/" title="Sublime Text - A sophisticated text editor for code, markup and prose">Sublime Text 3</a>.</p>
+<figure>
+  <img alt="SACS input file syntax-highlighted in Sublime Text 3." src="https://raw.githubusercontent.com/ckunte/sacs_st/master/sacs_st.png">
+  <figcaption>SACS input file syntax-highlighted in Sublime Text 3.</figcaption>
+</figure>
+
+<p>Ensure SACS input files end with <code>.inp</code> for syntax highlighting to work.</p>
+<h2>Recommended method of installation</h2>
+<p>With this package now available from Package Control,<sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup> <code>sacs_st</code> can be installed from directly within Sublime Text 3. Here is how:</p>
+<ol>
+<li>From <em>Tools</em>, select <em>Install Package Control&hellip;</em> (Skip if already installed.) </li>
+<li>From <em>Preferences &gt; Package Control &gt; Install Package</em>, search for <code>sacs</code> and select.</li>
+</ol>
+<h2>Manual installation</h2>
+<p>Alternatively, if you have no access to internet or prefer a manual install then, download and place <a href="https://github.com/ckunte/sacs_st/blob/master/sacs.sublime-syntax"><code>sacs.sublime-syntax</code></a> file under <em>Packages &gt; User</em> folder, which is accessible from <em>Preferences &gt; Browse Packages&hellip;</em> menu.<sup id="fnref:2"><a class="footnote-ref" href="#fn:2">2</a></sup> </p>
+<h2>Trivia</h2>
+<p>SACS commands are spread across its numerous manuals, and so it was an interesting exercise in amassing them all into a <a href="https://gist.github.com/ckunte/d4bd35e2ac07dc6d575d95c60a61a8ef" title="SACS commands common across its modules · GitHub">list</a> first, and then sort them to remove duplicates. But before doing so, I wanted to see <a href="https://gist.github.com/ckunte/d4bd35e2ac07dc6d575d95c60a61a8ef" title="SACS commands common across its modules · GitHub">which ones were repeated</a>. So I wrote this script to find out:</p>
+<pre><code class="language-python">#!/usr/bin/env python
+# -*- encoding: utf-8 -*-
+# Find most common sacs commands across modules
+# 2020 ckunte
+
+import re
+from collections import Counter
+
+# read a file containing all sacs commands
+commands = re.findall(r'\w+', open('sacs-commands-all.txt').read())
+
+# print 85 most common commands across all sacs modules
+mcom = Counter(commands).most_common(85)
+for com, nos in mcom:
+    print(&quot;{:&lt;12}{:&lt;9}&quot;.format(com, nos))
+</code></pre>
+<p>The number 85 in the code above is arbitrary. I tried a few others before like 100, 90, until single occurrences of commands reduced to just a couple. Now that I think of it, there is an even simpler way to sort unique list of commands using chained shell commands<sup id="fnref:3"><a class="footnote-ref" href="#fn:3">3</a></sup> like so:</p>
+<pre><code>curl https://gist.githubusercontent.com/ckunte/d4bd35e2ac07dc6d575d95c60a61a8ef/raw/07cdd051893455544cac2185c08a83aab3e468e1/sacs-commands-all.txt | sort | uniq -c | sort -nr | grep -v "#"
+</code></pre>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:1">
+<p><a href="https://packagecontrol.io/packages/SACS" title="SACS - Packages - Package Control">Available from Package Control</a> as of December 13, 2020.&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:2">
+<p>With the manual method, however, be aware that one needs to also download updates manually whenever they are released, which means keeping track of the <a href="https://github.com/ckunte/sacs_st" title="SACS syntax for Sublime Text">repository</a> for updates.&#160;<a class="footnote-backref" href="#fnref:2" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:3">
+<p>The remote file is first downloaded to memory using <code>curl</code>, which is then fed to <code>sort</code>, whose output is then checked for unique items (with repeats counted) using <code>uniq -c</code>, the result of which is sorted in descending order with <code>sort -nr</code>, whose output is filtered removing all lines with <code>#</code>, since these are SACS module titles/comments but not commands themselves.&#160;<a class="footnote-backref" href="#fnref:3" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+  </article>
+  
+      <footer>
+        <span><a accesskey="j" title="Dropped pipe" href="/2020/impact">&larr; Prev</a></span>
+        <span><a accesskey="k" title="Shell buckling" href="/2020/ebs">Next &rarr;</a></span>
+      </footer>
+
+  </main>
+</body>
+</html>

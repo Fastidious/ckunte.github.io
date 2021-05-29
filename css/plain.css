@@ -1,7 +1,7 @@
 @charset "UTF-8";
 
 :root {
-  --cwidth: 51ch;
+  --cwidth: 54rem;
   --body-ff: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   /* common colour(s) */
   --comm-co: #666;
@@ -127,7 +127,7 @@ hr {
 .footnote li {
   font-size: 87%
 }
-a:link {
+a {
   color: blue;
   text-decoration: none;
   outline: 0;
@@ -135,10 +135,11 @@ a:link {
 a:hover {
   text-decoration: underline;
 }
-a:visted {
-  color: purple;
-}
 p, dd, figcaption {
+/*
+  text-align: justify;
+  text-align-last: left; 
+*/
   word-wrap: break-word;
   overflow-wrap: break-word;
   -webkit-hyphens: auto;
@@ -190,20 +191,123 @@ hr:after {
   content: "* * *";
   position: relative;
 }
+/* Code highlight (Light) */
+
+/* a11y-light theme */
+/* Based on the Tomorrow Night Eighties theme: https://github.com/isagalaev/highlight.js/blob/master/src/styles/tomorrow-night-eighties.css */
+/* @author: ericwbailey */
+
+/* Comment */
+.hljs-comment,
+.hljs-quote {
+  color: #6495ED;
+  font-style: italic;
+}
+
+/* Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+  color: #d91e18;
+}
+
+/* Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+  color: #aa5d00;
+}
+
+/* Yellow */
+.hljs-attribute {
+  color: #aa5d00;
+}
+
+/* Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+  color: #008000;
+}
+
+/* Blue */
+.hljs-title,
+.hljs-section {
+  color: #007faa;
+}
+
+/* Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+  color: #7928a1;
+}
+
+.hljs {
+  display: block;
+  overflow-x: auto;
+  background: var(--lite-bc);
+  color: #545454;
+  padding: 0.5em;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: bold;
+}
+
+@media screen and (-ms-high-contrast: active) {
+  .hljs-addition,
+  .hljs-attribute,
+  .hljs-built_in,
+  .hljs-builtin-name,
+  .hljs-bullet,
+  .hljs-comment,
+  .hljs-link,
+  .hljs-literal,
+  .hljs-meta,
+  .hljs-number,
+  .hljs-params,
+  .hljs-string,
+  .hljs-symbol,
+  .hljs-type,
+  .hljs-quote {
+        color: highlight;
+    }
+
+    .hljs-keyword,
+    .hljs-selector-tag {
+        font-weight: bold;
+    }
+}
+
 code {
   padding: 0.35ch 0.5ch;
   background-color: var(--lite-bc);
   border-radius: 0.35ch;
 }
 blockquote {
-  margin-left: 3ch;
-  margin-right: 3ch;
+  margin-left: 2ch;
+  margin-right: 2ch;
 }
 blockquote p, blockquote li {
   font-style: italic;
 }
 article:nth-child(odd) {
-  margin:3ch 0!important
+  margin:5ch 0!important
 }
 h2 {
   font-size: 105%;
@@ -219,11 +323,31 @@ kbd {
   box-shadow:inset 0 -2px 0 #d1d5da;
   vertical-align: text-top;
 }
-@media screen and (min-width: 36rem) {
+@media only screen and handheld {
+  body {
+    font-size: 1.4rem;
+  }
+}
+@media only screen and (max-width: 54rem) and (min-width: 26rem) {
+  body {
+    font-size: 1.5rem;
+  }
+}
+@media screen and (min-width: 54rem) {
+  body {
+    font-size: 1.5rem;
+  }
   .two {
     display: grid;
     grid-template-columns: repeat(2, 48%);
     justify-content: space-between;
+/*    
+  -webkit-columns: 2;
+     -moz-columns: 2;
+          columns: 2;  
+   -moz-column-fill:auto;
+        column-fill:auto;
+*/
   }
   dd {
     break-before: avoid;
@@ -231,15 +355,6 @@ kbd {
   dt {
     break-after: avoid;
   }
-  /*
-  aside {
-    padding: 0;
-    margin-bottom: 2ch;
--webkit-columns: 2;
-   -moz-columns: 2;
-        columns: 2;  
-  }
-  */
 }
 /*
 aside > p > img {
@@ -253,27 +368,34 @@ aside blockquote > p {margin-top: 0}
 aside p {margin-top: 0}
 */
 /* Indented para */
-article p + p, article blockquote p + p { text-indent:2ch; margin-top:-1.3ch }
-article blockquote > p {margin-top: 0}
-article p {margin-top: 0.5ch}
+.w p + p, .w blockquote p + p { text-indent:2ch; margin-top:-1.3ch }
+.w blockquote > p {margin-top: 0}
+.w p {margin-top: 0.5ch}
 
-@media only screen and handheld {
-  body {
-    font-size: 100%;
+@media (prefers-color-scheme: dark) {
+  body, header, article, aside, footer {
+    background-color: #333;
+  }
+  h1, h2, p, li, dl, code, time {
+    color: #bbb;
+    background-color: transparent
+  }
+  small, table, figcaption, hr, img.screen, img.fig, kbd {
+    filter: invert(0.8)
+  }
+  pre {
+    filter: invert(0.9)
+  }
+  mark {
+    color: #FFD700;
+  }
+  code, mark {
+    background-color: #222
+  }
+  a {
+    color: #00BFFF
   }
 }
-@media only screen and (max-width: 51ch) and (min-width: 26ch) {
-  body {
-    font-size: 113%;
-  }
-}
-@media screen and (min-width: 51ch) {
-  body {
-    font-size: 132%;
-  }
-
-
-/* Print */
 @media print {
   @page {
     size: auto;
@@ -284,18 +406,24 @@ article p {margin-top: 0.5ch}
     width: 85%;
     margin: 0 auto;
   }
-  /*
-  header, footer {
+  time:before {
+    display: block;
+    float: right;
+    /* text-align: right; */
+    content: "Terms of use: ckunte.net/about";
+    font-style: italic;
+    font-size: 75%;
+    }
+  /*header,*/ footer {
     display: none;
   }
-  */
-  header:after {
-    /* border: 1px solid #000; */
-    padding: 2ch 0;
+  main:after {
+    border-top: 2px solid #000;
+    padding-top: 1ch;
     display: block;
     text-align: left;
-    content: "Disclaimer, Terms of use: The author does not speak for his employer. Be warned that anything presented herein on this site is without warranty, and whose quality or correctness are not to be assumed. If you use any of this in any way, then you do so at your own risk.";
+    content: "Chetan Kunte is a technical authority on fixed and floating offshore structures at RDS.";
     font-style: italic;
-    font-size: 10pt;
+    font-size: 75%;
     }
 }

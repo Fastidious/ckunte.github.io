@@ -1,3 +1,3 @@
 User-agent: *
 Disallow: /img/
-Disallow: /w*
+Disallow: /file/

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+  <title>ckunte.net: Release notes</title>
+  <meta name="description" content="The mechanics of running this website, and what makes it go." />
+  <meta name="author" content="Chetan Kunte" />
+  <link rel="apple-touch-icon-precomposed" href="/img/apple-touch-icon.png" />
+  <link rel="canonical" href="/2021/rel" />
+  <link rel="stylesheet" href="/css/plain.css" type="text/css" />
+<script src="/css/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+  <!-- The loading of KaTeX is deferred to speed up page rendering -->
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous"></script>
+  <!-- To automatically render math in text elements, include the auto-render extension: -->
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+</head>
+<body>
+  <main>
+<header>
+  <a accesskey="/" href="/"><img alt="/" class="logo" src="/img/apple-touch-icon.png" width="64" height="64"></a>
+</header>
+  
+  
+  <article>
+  	<h1>Release notes</h1>
+  	<time datetime="2021-02-21 15:04">February 21, 2021</time>
+  	<p>The publishing mechanism used to produce this website is a topic perhaps of least interest to a structural engineer, nonetheless, I&rsquo;d like to, if only to keep a note of the work done and changes made. But first some trivia.</p>
+<p>By 2010, I was fed-up with a popular open source web publishing software I&rsquo;d been using since 2004. Its code base was changing so rapidly that I could not keep up. To quote Tom Preston-Werner, <a href="https://tom.preston-werner.com/2008/11/17/blogging-like-a-hacker.html" title="Blogging Like a Hacker">Blogging Like a Hacker</a> (2008):</p>
+<blockquote>
+<p>I already knew a lot about what I didn&rsquo;t want. I was tired of complicated blogging engines like WordPress and Mephisto. I wanted to write great posts, not style a zillion template pages, moderate comments all day long, and constantly lag behind the latest software release.</p>
+<p>On Sunday, October 19th, I sat down in my San Francisco apartment with a glass of apple cider and a clear mind. After a period of reflection, I had an idea. While I&rsquo;m not specifically trained as an author of prose, I am trained as an author of code. What would happen if I approached blogging from a software development perspective? What would that look like?</p>
+</blockquote>
+<p>By 2011, fatigued by bloat and potential vulnerabilities of open source web publishing software stack, Tom&rsquo;s post was a raging fire among developers and wannabes. It kick-started static site generator revolution, and helped people realise that writing one was not some dark art that needed an army of engineers and volunteers for it to be useful.<sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup> One could also get rid of all the complexities of running and managing database instances, and keep them from corrupting over time, be it from upgrades or from encoding.</p>
+<p>These trends helped re-assess my needs too. For instance, questioning the need to use traditional web service hosts, or the need for pre-requisites like <a href="https://en.wikipedia.org/wiki/LAMP_(software_bundle)" title="LAMP (software bundle) - Wikipedia">LAMP</a> stack to be able to host simple websites. Having such software in the cloud and shared across users amplified attack vectors for hapless publishers.<sup id="fnref:2"><a class="footnote-ref" href="#fn:2">2</a></sup> And for what really? For the comfort of publishing on the road by accessing an archaic login system without multi-factor authentication? It&rsquo;s ridiculous in hindsight of course, but there was a time many of us thought that there really was no alternative.</p>
+<p>In 2012, after years of grappling with software bloat, security gaffes, and latency of various web publishing services, I decided to take control of my publishing set-up. My objectives in maintaining control over publishing work-flow were:</p>
+<ol>
+<li>To write and present code, math, and prose effortlessly</li>
+<li>Enable login-less and cryptographically-secure publishing</li>
+<li>Ensure portability of notes together with track changes</li>
+<li>Maintain bare bones, readable, safe, and low-dependency code base</li>
+<li>Use a decent template engine to be able to do more with less code</li>
+</ol>
+<p>After some searching and evaluating, I found <a href="https://github.com/dz/chisel" title="GitHub - dz/chisel: a simple Python static blog generation utility">Chisel</a> &mdash; a simple python script to turn notes, written in <a href="https://en.wikipedia.org/wiki/Markdown" title="Markdown - Wikipedia">markdown</a>, into html pages, and auto-arrange them in a neatly linked structure. It employed <a href="https://jinja.palletsprojects.com/" title="Jinja">Jinja</a>, a minimalist, performant template engine; <a href="https://git-scm.com/" title="Git">git</a> for tracking changes in both notes and code; and <a href="https://pages.github.com/" title="GitHub Pages | Websites for you and your projects, hosted directly from your GitHub repository. Just edit, push, and your changes are live.">GitHub</a> for static site hosting. I subsequently <a href="https://github.com/ckunte/chisel/tree/ck" title="GitHub - ckunte/chisel at ck">added a few features</a> to Chisel I wanted for myself.</p>
+<p>Both the model and the controller are local processes, having decided long ago that I would run nothing in the cloud. Only the view produced (from a combination of model and controller processes) is pushed to the host via git.<sup id="fnref:3"><a class="footnote-ref" href="#fn:3">3</a></sup> Today I am able to say that after nine years of sustained use of this above set-up, it remains very usable. The code base has remained the same, with lines of code never exceeding more than a few overall, and it is as readable today as I had first found it. The only noteworthy maintenance I undertook was in 2019-20, when concerned by the need to <a href="https://www.python.org/doc/sunset-python-2/">phase out python v2</a>, I sat down to re-factor Chisel to python 3. I did so <a href="https://github.com/dz/chisel/pull/7/commits/13d3d3ee3b7ede6bd41b962f8abee0ba629578b9" title="2to3 by ckunte · Pull Request #7 · dz/chisel · GitHub">without discernible change</a> in code. </p>
+<p>This is a set of release notes, covering features or updates, from that exercise done a year ago, and split into model-view-controller process categories.</p>
+<h2>Controller</h2>
+<ol>
+<li>Blurb feature for each note (new)</li>
+<li>Date is ISO 8601 compliant (new)</li>
+<li>Fenced code markdown extension enabled (new)</li>
+<li>Generator specific config file (new)</li>
+<li>Re-factored to python 3 (new)</li>
+<li>Select contributions sent upstream via pull requests (update)</li>
+</ol>
+<h2>Model</h2>
+<ol>
+<li>Feed templates now in Atom format; RSS format superseded (new)</li>
+<li>Keyboard-only navigation with circular return back to homepage (update)</li>
+<li>Maintain note count continuity from homepage to archive (new)</li>
+<li>Notes split between homepage and archive page sans duplication (new)</li>
+<li>Template parameters: single config file, selective imports (new)</li>
+<li>Templates modularised with child templates (new)</li>
+</ol>
+<h2>View</h2>
+<ol>
+<li>Custom font calls eliminated (update)</li>
+<li>Dark mode honouring user-set appearance settings on devices (update)</li>
+<li>Numerous template snippets re-factored to be modular (update)</li>
+<li>Re-design, html5 and css3 compliant (new)</li>
+<li>Render math with <a href="https://katex.org/" title="KaTeX – The fastest math typesetting library for the web">KaTeX</a> engine (new)</li>
+<li>Snippets re-formatted using <a href="https://pypi.org/project/black/" title="black · PyPI">black</a> for improved readability (new)</li>
+</ol>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:1">
+<p>This was especially true for medium to low volume publishers, who were not producing 1,000+ posts a month, and who did not need to own, maintain, upgrade this web application stack on a server, stay subscribed to application security news, and patch at a moment&rsquo;s notice upon discovering vulnerabilities.&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:2">
+<p>I endured two security breaches between 2002&ndash;6, which were scary, and I realised that if I were to continue with this hobby (of writing on the web), then I could not afford to remain oblivious to the workings of web hosts or software they offered access to.&#160;<a class="footnote-backref" href="#fnref:2" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:3">
+<p>This eliminates the need for a feature-rich web server on the host, and is therefore ideal for hosting a locally generated static site.&#160;<a class="footnote-backref" href="#fnref:3" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+  </article>
+  
+      <footer>
+        <span><a accesskey="j" title="Storm safety" href="/2021/storm-safety">&larr; Prev</a></span>
+        <span><a accesskey="k" title="Jacket flooding" href="/2021/jf">Next &rarr;</a></span>
+      </footer>
+
+  </main>
+</body>
+</html>
