@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+  <title>ckunte.net: Type-setting from within ST3</title>
+  <meta name="description" content="Creating a build system in Sublime Text 3 for LaTeX." />
+  <meta name="author" content="Chetan Kunte" />
+  <link rel="apple-touch-icon-precomposed" href="/img/apple-touch-icon.png" />
+  <link rel="canonical" href="/2020/buildst3" />
+  <link rel="stylesheet" href="/css/plain.css" type="text/css" />
+  <script src="/css/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css" integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+  <!-- The loading of KaTeX is deferred to speed up page rendering -->
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js" integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp" crossorigin="anonymous"></script>
+  <!-- To automatically render math in text elements, include the auto-render extension: -->
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+</head>
+<body>
+  <main>
+<header>
+  <a accesskey="/" href="/"><img alt="/" class="logo" src="/img/apple-touch-icon.png" width="64" height="64"></a>
+</header>
+  
+  
+  <article>
+  	<h1>Type-setting from within ST3</h1>
+  	<time datetime="2020-09-27 19:52">September 27, 2020</time>
+  	<p>For all the years I&rsquo;ve been using <a href="https://www.sublimetext.com/" title="Sublime Text - A sophisticated text editor for code, markup and prose">Sublime Text</a> to write my reports in LaTeX, creating a build system had escaped my list of to-dos. <a href="https://www.sublimetext.com/docs/3/build_systems.html" title="Build Systems – Sublime Text 3 Documentation">Build systems</a> are handy: they enable building (compiling, type-setting) from within Sublime Text. Here are a couple of steps for MacOS:</p>
+<ol>
+<li>
+<p>Select <em>Tools &gt; Build System &gt; New Build System&hellip;</em> and replace the entire pre-populated JSON instruction with the following:</p>
+<pre><code>{
+    "cmd": ["/Library/TeX/texbin/xelatex", "$file"],
+    "selector": "text.tex.latex"
+}
+</code></pre>
+<p>To explain the above, I use <code>xelatex</code> as my type-setting system. Finding the path of <code>xelatex</code> is as easy as running a query at command line like so:</p>
+<pre><code>$ which xelatex
+</code></pre>
+</li>
+<li>
+<p>Save it as <code>LaTeX.sublime-build</code>. (It will be saved under the folder <code>~/Library/Application Support/Sublime Text 3/Packages/User/</code>.)</p>
+</li>
+<li>
+<p>This above allows one to type-set (or build) by pressing <kbd>&#8984;</kbd> + <kbd>B</kbd>.</p>
+</li>
+</ol>
+<p>A minor wrinkle with the build system is that unlike running <code>xelatex</code> from Terminal, building from within Sublime Text does not recognise artefacts (like class and style files) placed within <code>~/texmf</code> folder, and so common resources require a full path. Following is an example. Note, e.g., <code>ckunte.sty</code> (style) file has been given a full path like so: </p>
+<pre><code>\usepackage{/Users/ckunte/texmf/ckunte}
+</code></pre>
+<p>Same goes for any resource within <code>~/texmf/ckunte.sty</code>. For instance, I use a custom <code>pythonhighlight.sty</code> within <code>~/texmf/ckunte.sty</code>. That needs to have a full path as well:</p>
+<pre><code>\usepackage{/Users/ckunte/texmf/pythonhighlight}
+</code></pre>
+<p>I am still figuring out how to replicate this on a hybrid system on my work machine with Sublime Text as native app in Windows 10, while <code>xelatex</code> is only accessible via Cygwin. Worst case scenario, I will have to stick to my old ways, which is to write in Sublime Text, and type-set via command line.</p>
+  </article>
+  
+      <footer>
+        <span><a accesskey="j" title="Self-documenting scripts" href="/2020/scridoc">&larr; Prev</a></span>
+        <span><a accesskey="k" title="Building a model" href="/2020/model">Next &rarr;</a></span>
+      </footer>
+
+  </main>
+</body>
+</html>
