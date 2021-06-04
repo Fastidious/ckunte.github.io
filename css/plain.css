@@ -135,6 +135,9 @@ a {
 a:hover {
   text-decoration: underline;
 }
+a:visited {
+  color: purple;
+}
 p, dd, figcaption {
 /*
   text-align: justify;
@@ -394,6 +397,9 @@ aside p {margin-top: 0}
   }
   a {
     color: #00BFFF
+  }
+  a:visited {
+    color: #FF85FF;
   }
 }
 @media print {
