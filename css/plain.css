@@ -344,19 +344,6 @@ kbd {
     display: grid;
     grid-template-columns: repeat(2, 48%);
     justify-content: space-between;
-/*    
-  -webkit-columns: 2;
-     -moz-columns: 2;
-          columns: 2;  
-   -moz-column-fill:auto;
-        column-fill:auto;
-*/
-  }
-  dd {
-    break-before: avoid;
-  }
-  dt {
-    break-after: avoid;
   }
 }
 /*
