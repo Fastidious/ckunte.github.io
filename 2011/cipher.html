@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+  <title>ckunte.net: Custom cipher</title>
+  <meta name="description" content="Passwords do not have to be hard to remember." />
+  <meta name="author" content="Chetan Kunte" />
+  <link rel="apple-touch-icon-precomposed" href="/img/apple-touch-icon.png" />
+  <link rel="canonical" href="/2011/cipher" />
+  <link rel="stylesheet" href="/css/plain.css" type="text/css" />
+  <script src="/css/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css" integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+  <!-- The loading of KaTeX is deferred to speed up page rendering -->
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js" integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp" crossorigin="anonymous"></script>
+  <!-- To automatically render math in text elements, include the auto-render extension: -->
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+</head>
+<body>
+  <main>
+<header>
+  <a accesskey="/" href="/"><img alt="/" class="logo" src="/img/apple-touch-icon.png" width="64" height="64"></a>
+</header>
+  
+  
+  <article>
+  	<h1>Custom cipher</h1>
+  	<time datetime="2011-02-07 22:03">February 7, 2011</time>
+  	<p>Couple of weeks ago, a friend of mine mentioned the following:</p>
+<blockquote>
+<p>During a recent password audit it was found that a blonde was using the following password:</p>
+<p><code>MickeyMinniePlutoHueyLouieDeweyDonaldGoofySacramento~</code> </p>
+<p>When asked why she had such a long password, she said she was told that it had to be at least 8 characters long and include at least one capital.</p>
+</blockquote>
+<p>If true, then the thinking behind generating such a password looks good alright. Pick your favourite characters/places/things and salt it with a completely unrelated term, and get yourself a decent password. (Sacramento has a Disney Store, so may not be completely unrelated; but still good nonetheless.)</p>
+<p>Many of us struggle to trust or rely on a third party software to generate and store our passwords for us. I&rsquo;m no exception. The problem with a third-party generated password is that it&rsquo;s meant to defy logic. And without logic, it&rsquo;s hard to remember and memorize it. So what do we do? We either write it down, or let one of these apps remember it for us. And by doing so, we open up an opportunity for moments of life to grip us the wrong way.</p>
+<p>Instead, what if we could write a password <em>generating phrase</em> down that would constitute some logic to us individually, without compromising our personal security?</p>
+<p>It&rsquo;s quite doable, if you think about it. One way to think of safe passwords is to use a standard cipher, <a href="http://en.wikipedia.org/wiki/Salt_(cryptography)">salted</a> to taste. Take <a href="http://en.wikipedia.org/wiki/ROT13">ROT13</a> for example.<sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup> You can write your favorite phrase down &mdash; like the blonde, and then encode it with a cipher like ROT13 whenever using it. Doing so, your password gets harder by an order of magnitude. To take it a few notches up, you could write your own non-standard cipher substitution, and use it. And further up that by yet another order of magnitude, by substituting certain numerals and special characters with other numerals and special characters.<sup id="fnref:2"><a class="footnote-ref" href="#fn:2">2</a></sup></p>
+<p>Here&rsquo;s one I wrote just for the demo.<sup id="fnref:3"><a class="footnote-ref" href="#fn:3">3</a></sup> Please do read the comments in the code. They&rsquo;re self-explanatory.</p>
+<pre><code class="language-python">#!/usr/bin/env python
+# -*- coding: UTF-8 -*-
+
+&quot;&quot;&quot;
+Make your own cipher and use it to
+generate your custom password.
+
+1. Think of a phrase that you love.
+2. Encode it with your custom cipher.
+3. Use it as your password.
+
+Should you decide to use your own cipher, then 
+think of a suitable set of characters to 
+substitute. The following is just an example.
+&quot;&quot;&quot;
+from sys import argv
+import string
+
+&quot;&quot;&quot;
+# Your custom cipher
+`user` is standard character set.
+`subs` is character substitution set for `user`.
+&quot;&quot;&quot;
+
+user = &quot;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz&quot;
+# Start editing.
+# Remember to use your own custom substitution below.
+subs = &quot;fghijvwxyzabcdekVWXYZAmnopqrstuBCDEKLMNOPQRSTUlFGHIJ&quot;
+# End of editing.
+
+def main():
+    print &quot;Remember to salt your familiar phrase.&quot;
+
+    try:
+        usertxt = argv[1]
+    except IndexError:
+        usertxt = raw_input(&quot;Text to be encoded: &quot;)
+
+    ciptrans = string.maketrans(user, subs)
+    p = usertxt.translate(ciptrans)
+
+    print &quot;Plain text   : &quot;, usertxt
+    print &quot;Ciphered text: &quot;, p
+    pass
+
+if __name__ == '__main__':
+    main()
+</code></pre>
+<p>When the script is run, this is what you&rsquo;d see.</p>
+<pre><code>$ python mycip.py
+Text to be encoded: MickeyminnyGoofyDonaldSacramento~
+Plain text   : MickeyminnyGoofyDonaldSacramento~
+Ciphered text: cEsLuINEOOIwPPBIiPOqMtXqsSqNuOUP~
+</code></pre>
+<p>The code<sup id="fnref:4"><a class="footnote-ref" href="#fn:4">4</a></sup> is basically just five lines when you strip comments, print statements and def statements away. Here&rsquo;s how they read:</p>
+<ul>
+<li>Line 1: <code>user</code> is a defined string of modern alphabets. First in caps, then in lower case.</li>
+<li>Line 2: <code>subs</code> is the cipher (A simple arrangement of characters I choose to substitute for every character in the string assigned <code>user</code>). For every capital <code>A</code>, I substitute it with lower case <code>f</code>; <code>B</code> with <code>g</code>, and so on. The cipher is intentionally a random arrangement of alphabets, and in no particular order to thwart a cracker if he gets thus far. (In this demo, I simply took the first list, mixed and mashed it randomly to come up with the string called <code>subs</code>.)</li>
+<li>Line 3: <code>usertxt</code> takes in keyboard input &mdash; enter the phrase you want to encode with your custom cipher as defined above.</li>
+<li>Line 4: <code>ciptrans</code> tells python to define the translate method of <code>user</code> string to <code>subs</code> string, alphabet by alphabet.</li>
+<li>Line 5: <code>p</code> translates (encodes or substitutes) the text entered at the keyboard with alphabets in <code>subs</code> string.</li>
+</ul>
+<p>That&rsquo;s it; and once you start using it, you&rsquo;ll notice that while this python script may be a convenience for generating your custom password, it&rsquo;s really your cipher that&rsquo;s important, i.e., the <code>user</code> and <code>subs</code> list, that you don&rsquo;t ever want to lose. Print and tape one to your refrigerator, and the other to your bathroom mirror. :-)</p>
+<p>Update (Aug 25, 2012): Six months after I wrote this post, Mr. Monroe published his comic, <a href="http://xkcd.com/936/">Password Strength</a>, and then last week, Mr. Honan, said <a href="http://www.wired.com/gadgetlab/2012/08/mat-honan-data-recovery/all/">this following</a> while recovering from a targeted attack that wiped his system clean:</p>
+<blockquote>
+<p>I hit an immediate problem: I didn&rsquo;t know any of my passwords&hellip;I&rsquo;m a heavy 1Password user. I use it for everything. That means most of my passwords are long, alphanumeric strings of gibberish with random symbols. It&rsquo;s on my iPhone, iPad and Macbook. It syncs up across all those devices because I store the keychain in the cloud on Dropbox&hellip;But I didn&rsquo;t have it on any of our other systems. So now I couldn&rsquo;t get to my keychain. And so I was stuck in a catch-22. My Dropbox password was itself a 1password-generated litany of nonsense. Without access to Dropbox, I couldn&rsquo;t get my keychain. Without my keychain, I couldn&rsquo;t get into Dropbox.</p>
+</blockquote>
+<p><strong>Update:</strong> I&rsquo;ve added argument support to the script above, which means if you provide a phrase while running the script, then it won&rsquo;t prompt you for the Text to be encoded. Instead, it ciphers the first argument you provide at prompt, e.g., see below:</p>
+<pre><code>$ python mycip.py MickeyminnyGoofyDonaldSacramento~
+Plain text   : MickeyminnyGoofyDonaldSacramento~
+Ciphered text: cEsLuINEOOIwPPBIiPOqMtXqsSqNuOUP~
+</code></pre>
+<p>If you have TextExpander, this can be further automated by creating a shell script like the following (using the argument variable inline), and assign the snippet a trigger like <code>;pass</code>:</p>
+<pre><code>#!/usr/bin/env sh
+python ~/mycip.py MickeySacramento~ | tr -d '\n' | pbcopy
+</code></pre>
+<p>Hit <code>;pass</code> anywhere, and your password parses your phrase with your custom cipher and produces your ciphered pass to clipboard memory on the fly. <code>tr -d '\n'</code> removes the carriage return part from your pass produced from python. (Common sense recommends exercising necessary caution when saving your phrases this way.)</p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:1">
+<p>It has a simple character substitution, rotated every 13 characters; hence the name.&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:2">
+<p>The custom cipher in the script does not substitute numerals or special characters, but you get the idea, to define it, should you want to.&#160;<a class="footnote-backref" href="#fnref:2" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:3">
+<p>I wrote the script for python 2.6.1, the one that&rsquo;s currently on a Mac. For version 3.x, you may have to do the necessary semantic change in the code. (But you&rsquo;d know that already by looking at the code.)&#160;<a class="footnote-backref" href="#fnref:3" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+<li id="fn:4">
+<p>I know the code is sloppy, and has bad naming convention, but I hope to be excused for being a hobbyist. =)&#160;<a class="footnote-backref" href="#fnref:4" title="Jump back to footnote 4 in the text">&#8617;</a></p>
+</li>
+<li id="fn:5">
+<p>Popularized by the infamous German ENIGMA machine that used polyalphabetic cipher during WWII to encode messages. That the Germans changed the underlying cipher every 24hours is what really made it impossible to crack in theory, which eventually was brute-forced in part by consistent social engineering from multiple sources to map known letters and words.&#160;<a class="footnote-backref" href="#fnref:5" title="Jump back to footnote 5 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+  </article>
+  
+      <footer>
+        <span><a accesskey="j" title="Interpolation" href="/2011/interpolation">&larr; Prev</a></span>
+        <span><a accesskey="k" title="Agora" href="/2011/agora">Next &rarr;</a></span>
+      </footer>
+
+  </main>
+</body>
+</html>

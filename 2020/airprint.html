@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+  <title>ckunte.net: AirPrint</title>
+  <meta name="description" content="Turn Brother HL-L2321D into an AirPrint enabled network printer." />
+  <meta name="author" content="Chetan Kunte" />
+  <link rel="apple-touch-icon-precomposed" href="/img/apple-touch-icon.png" />
+  <link rel="canonical" href="/2020/airprint" />
+  <link rel="stylesheet" href="/css/plain.css" type="text/css" />
+  <script src="/css/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css" integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+  <!-- The loading of KaTeX is deferred to speed up page rendering -->
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js" integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp" crossorigin="anonymous"></script>
+  <!-- To automatically render math in text elements, include the auto-render extension: -->
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+</head>
+<body>
+  <main>
+<header>
+  <a accesskey="/" href="/"><img alt="/" class="logo" src="/img/apple-touch-icon.png" width="64" height="64"></a>
+</header>
+  
+  
+  <article>
+  	<h1>AirPrint</h1>
+  	<time datetime="2020-06-01 09:12">June 1, 2020</time>
+  	<p>Brother HL-L2321D does one thing and does it well. It&rsquo;s fast, prints duplex, and is lean on cartridge usage. Its drivers are available for MacOS and Windows 10, and so installing it is a breeze. Despite the fact that it has one USB port for interface, making this printer accessible (a) over network and (b) on iOS devices is easy too. This requires setting up a print server. Here&rsquo;s why: The key difference between a non-network and a network printer is that the latter not only features hardware (viz., a network port and / or a wireless chip) but that it also has a print server built-in to the printer itself. These missing features in a non-network printer can easily be outsourced to, say, a Raspberry Pi, which may in fact make this a more capable printer than an off-the-shelf network printer.</p>
+<h2>Setting up a print server on Raspberry Pi</h2>
+<p>Connecting it to a <a href="https://www.raspberrypi.org/help/" title="Help Guides and Resources - How to Use Raspberry Pi">Raspberry Pi</a> on your home network to enable sharing requires a little work, but when done, it makes this printer not only a network printer, but also an <a href="https://support.apple.com/en-au/HT201387" title="Use AirPrint to print from your iPhone, iPad or iPod touch – Apple Support">AirPrint</a> enabled printer. Here&rsquo;s how:</p>
+<ol>
+<li>
+<p>Prep the Raspberry Pi to download and install <a href="https://www.cups.org/" title="CUPS.org">CUPS</a>, compile and install Brother laser printer specific drivers, kindly made available by @pdewacht.</p>
+<pre><code>sudo apt update &amp;&amp; sudo apt upgrade -y
+sudo apt install cups libcups2-dev libcupsimage2-dev -y
+sudo usermod -a -G lpadmin &lt;piusername&gt;
+sudo cupsctl --remote-admin --remote-any --share-printers
+git clone --depth=1 https://github.com/pdewacht/brlaser.git
+cd brlaser/
+cmake .
+make
+sudo make install
+sudo systemctl restart cups
+</code></pre>
+<p>In the above, be sure to replace <code>&lt;piusername&gt;</code> with an actual username you use on Raspberry Pi.</p>
+</li>
+<li>
+<p>Access the CUPS administration page on the home network at <code>http://&lt;raspberrypi's address here&gt;:631/admin/</code>. (Ignore the http browser warning and proceed to the page, since you&rsquo;re on your own home network.) Click on <em>Add Printer</em> button. When prompted for username and password, provide those you access with on raspberry pi.) Select Brother HL-L2320D series in <em>Local Printers</em>, and press continue.</p>
+</li>
+<li>Note the name (typically <code>Brother_HL-L2320D_series</code> unless you change it). Enable <em>Share This Printer</em>, and press continue.</li>
+<li>Under <em>Model</em>, select <code>Brother HL-L2300D series, using brlaser v6 (en)</code>, and press <em>Add Printer</em> button.</li>
+<li>In the next page, set default options as you require, and click on <em>Set Default Options</em> button.</li>
+<li>Under <em>Printers</em> tab, select second pull down menu under <em>Administration</em> and select <em>Set as Server Default</em>.</li>
+</ol>
+<h2>On iOS</h2>
+<p>No additional setup necessary, the printer is duly recognised once it is setup as above. Here is how it looks.</p>
+<figure>
+  <img alt="AirPrint enabled on Brother HL-L2321D USB-only printer." class="fig" src="/img/airprint.png" loading="lazy">
+  <figcaption>AirPrint enabled on Brother HL-L2321D USB-only printer.</figcaption>
+</figure>
+
+<h2>On MacOS</h2>
+<p>Once a print server is set up, install the printer on MacOS in the usual way. Bonjour auto-finds the printer, pulls-in the required drivers, and sets it up.</p>
+<h2>On Windows 10</h2>
+<p>Once a print server is set up, print drivers for Windows 10 are readily available, and therefore setting this up is pretty straight forward too. To install on Windows 10, select shared printers option under <em>Add printers</em>, and add the following URL:</p>
+<pre><code>http://&lt;ipaddress of raspberry pi&gt;:631/printers/Brother_HL-L2320D_series
+</code></pre>
+  </article>
+  
+      <footer>
+        <span><a accesskey="j" title="The Dark Sky Project" href="/2020/darksky">&larr; Prev</a></span>
+        <span><a accesskey="k" title="USFOS syntax in ST3" href="/2020/ust">Next &rarr;</a></span>
+      </footer>
+
+  </main>
+</body>
+</html>

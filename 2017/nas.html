@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+  <title>ckunte.net: NAS</title>
+  <meta name="description" content="A thrifty make-do setup for E.T. on the road to phone home." />
+  <meta name="author" content="Chetan Kunte" />
+  <link rel="apple-touch-icon-precomposed" href="/img/apple-touch-icon.png" />
+  <link rel="canonical" href="/2017/nas" />
+  <link rel="stylesheet" href="/css/plain.css" type="text/css" />
+  <script src="/css/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css" integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+  <!-- The loading of KaTeX is deferred to speed up page rendering -->
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js" integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp" crossorigin="anonymous"></script>
+  <!-- To automatically render math in text elements, include the auto-render extension: -->
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+</head>
+<body>
+  <main>
+<header>
+  <a accesskey="/" href="/"><img alt="/" class="logo" src="/img/apple-touch-icon.png" width="64" height="64"></a>
+</header>
+  
+  
+  <article>
+  	<h1>NAS</h1>
+  	<time datetime="2017-12-25 22:05">December 25, 2017</time>
+  	<p>QNAP TS-251+ would be an ideal choice for a personal <a href="https://en.wikipedia.org/wiki/Network-attached_storage">NAS</a>, but at &euro;500.-, it&rsquo;s expensive for my humble needs. Someday I might upgrade to one of these with all the bells and whistles, and may even have it run <a href="https://en.wikipedia.org/wiki/ZFS">ZFS</a>; just not today. For now, I&rsquo;ve opted to build one from scratch at one-twelfth its cost.</p>
+<p>Functional requirements:</p>
+<ol>
+<li>Low cost and tiny footprint</li>
+<li>Set-up on an <a href="https://www.apple.com/airport-express/">Apple Airport</a> powered home router</li>
+<li>Secure personal cloud with access worldwide</li>
+<li>Very low power consumption,<sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup> so that it can stay alive by sharing a low capacity UPS with my wireless network router</li>
+</ol>
+<p>I realised I could satisfy the above requirements by simply re-purposing my &euro;40.- Raspberry Pi for this task. It took the following 3 work-flows to get it working<sup id="fnref:2"><a class="footnote-ref" href="#fn:2">2</a></sup>:</p>
+<h2>1. Raspberry Pi setup</h2>
+<ol>
+<li>Raspbian lite image installed</li>
+<li>Defaults changed</li>
+<li><a href="https://en.wikipedia.org/wiki/Secure_Shell">SSH</a> enabled with <a href="https://en.wikipedia.org/wiki/Public-key_cryptography">access via public key</a>, and </li>
+<li>Hardened for security</li>
+</ol>
+<h2>2. Home router setup</h2>
+<ol>
+<li>Pi&rsquo;s local IP address reserved under <em>Network tab &rarr; DHCP Reservations</em></li>
+<li>Port-forwarding set up under <em>Network tab &rarr; Port Settings</em></li>
+</ol>
+<h2>3. DDNS setup</h2>
+<ol>
+<li>DDNS records updated on service provider&rsquo;s control panel to map a private domain I own</li>
+<li>Pi&rsquo;s IP address setup to refresh periodically using Anacron<sup id="fnref:3"><a class="footnote-ref" href="#fn:3">3</a></sup></li>
+</ol>
+<h2>NAS access</h2>
+<p>Currently set up to be accessible only via a shell on a custom port. For login, I run a command like below:</p>
+<pre><code>ssh &lt;userid&gt;@&lt;privatedomain&gt; -p &lt;custom port&gt;
+</code></pre>
+<p>But mostly, I use <a href="https://en.wikipedia.org/wiki/Rsync">rsync</a> to download or upload files (or folders), and <a href="https://git-scm.com">git</a> to push or pull code from my private repositories &mdash; since my NAS also functions as a private git server.</p>
+<pre><code>rsync -auvz -e 'ssh -p &lt;custom port&gt;' &lt;userid&gt;@&lt;privatedomain&gt;:/home/&lt;userid&gt;/d/somefile.pdf ./somefile.pdf
+</code></pre>
+<p>Unlike most NAS, my drives stay disconnected and need a human to connect it physically before I can mount a drive virtually and then access files on it &mdash; this is by design.<sup id="fnref:4"><a class="footnote-ref" href="#fn:4">4</a></sup></p>
+<h2>NAS access from restricted networks</h2>
+<p>Occasionally, I have to deal with networks that restrict outgoing SSH connections. For this, I use <a href="http://freshmeat.sourceforge.net/projects/corkscrew">Corkscrew</a> to tunnel through https proxies via ports, e.g., 443, which restricted networks do not typically block to avoid service disruptions. So, if I use port 443 as an example to tunnel through a proxy, then the login command becomes:</p>
+<pre><code>ssh &lt;userid&gt;@&lt;privatedomain&gt; -D 443 -p &lt;custom port&gt;
+</code></pre>
+<p>Configuring is very simple, just add a <code>config</code> file to <code>.ssh</code> folder with the following details:</p>
+<pre><code>ProxyCommand /usr/local/bin/corkscrew &lt;proxy server&gt; 80 %h %p
+</code></pre>
+<p>Replace <code>&lt;proxy server&gt;</code> with the actual proxy address, and you&rsquo;re good to go. For a select host, this can be as follows:</p>
+<pre><code>Host &lt;privatedomain&gt;
+ProxyCommand /usr/local/bin/corkscrew &lt;proxy server&gt; 80 %h %p
+</code></pre>
+<p>When not needed to tunnel-through, I just rename <code>config</code> to <code>_config</code> to turn-off http(s) tunnelling.</p>
+<h2>Mosh</h2>
+<p>The NAS is also <a href="https://mosh.org/" title="Mosh: the mobile shell">mobile shell</a> enabled &mdash; to allow roaming + intermittent connectivity.<sup id="fnref:5"><a class="footnote-ref" href="#fn:5">5</a></sup> As mosh works over UDP, I had to allow a port range, and install <code>iptables-persistent</code>.</p>
+<pre><code>sudo iptables -I INPUT 1 -p udp --dport 60000:60100 -j ACCEPT
+sudo service iptables save
+sudo apt install iptables-persistent
+</code></pre>
+<p>Mosh makes you feel like you have super powers, no really! One would think it would be mindless to back-up a laptop on a bus travelling on rural roads with patchy cellular network to a raspberry-pi connected storage at home. And yet, I do exactly this and often on my 90min long evening commute.</p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:1">
+<p>In a country where power fluctuates like flashing lights on a Christmas tree, the only way to stay alive during critical differential backup routines is to consume less power.&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:2">
+<p>You&rsquo;ll note that this is not a step-wise how-to post. Instead, I&rsquo;m keeping it high-level with key steps that matter for a successful setup, and by which I mean some steps may require one to research and follow instructions elsewhere.&#160;<a class="footnote-backref" href="#fnref:2" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:3">
+<p>I use Anacron since I don&rsquo;t necessarily find the need to keep the Pi accessible 24&times;7, but only on days I think I need access. Periodic update is needed for home internet connections with dynamically assigned IP addresses by ISPs.&#160;<a class="footnote-backref" href="#fnref:3" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+<li id="fn:4">
+<p>Also to conserve power, I&rsquo;ve turned off display power circuitry on the Pi by disabling HDMI (via <code>/usr/bin/tvservice -o</code>; <code>-p</code> would enable it again).&#160;<a class="footnote-backref" href="#fnref:4" title="Jump back to footnote 4 in the text">&#8617;</a></p>
+</li>
+<li id="fn:5">
+<p><code>mosh</code> is installed on both the client and the server.&#160;<a class="footnote-backref" href="#fnref:5" title="Jump back to footnote 5 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+  </article>
+  
+      <footer>
+        <span><a accesskey="j" title="make" href="/2017/make">&larr; Prev</a></span>
+        <span><a accesskey="k" title="TLP" href="/2018/tlp">Next &rarr;</a></span>
+      </footer>
+
+  </main>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+  <title>ckunte.net: make</title>
+  <meta name="description" content="The glue that holds many one liners together." />
+  <meta name="author" content="Chetan Kunte" />
+  <link rel="apple-touch-icon-precomposed" href="/img/apple-touch-icon.png" />
+  <link rel="canonical" href="/2017/make" />
+  <link rel="stylesheet" href="/css/plain.css" type="text/css" />
+  <script src="/css/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css" integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+  <!-- The loading of KaTeX is deferred to speed up page rendering -->
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js" integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp" crossorigin="anonymous"></script>
+  <!-- To automatically render math in text elements, include the auto-render extension: -->
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+</head>
+<body>
+  <main>
+<header>
+  <a accesskey="/" href="/"><img alt="/" class="logo" src="/img/apple-touch-icon.png" width="64" height="64"></a>
+</header>
+  
+  
+  <article>
+  	<h1>make</h1>
+  	<time datetime="2017-08-19 23:23">August 19, 2017</time>
+  	<p>Returning from the Tamara, Coorg last week, my only vacation this year, I knew my following week would be nothing short of a back-breaking stone quarry work. So on Monday, just as I was about to get-on, my otherwise reliable work notebook began flashing BSOD. Post frantic calls to IT help-desk, they dispatched a helpful hardware engineer at running speed. He patiently went through system diagnostics and in the end said it&rsquo;s software, which requires a wipe + re-image routine. I lifted my hands up in exasperation, thinking about my planned work week that just got flushed. </p>
+<p>The good thing is that on any given day, I am fully backed-up and up to speed. Ten years ago when I got hit by a bad crash, I vowed to never let this happen to me again. So, everyday my scripts run for about ten minutes before I call it a day, differentially backing everything-up with the ever reliable <a href="https://rsync.samba.org/" title="rsync">rsync</a>. So when he asked if I needed more time to manage my data on disk, I said no, and that he should continue. The engineer then proceeded to re-image my machine. Here&rsquo;s the thing though, and I am trying very hard not to swear, the official images are <em>never</em> up to speed! This makes any freshly re-imaged machine all but usable for the next 48 hours, as auto-downloading updates and profiled software, punctuated by countless reboots, completely consumes the computer. It&rsquo;s often longer as these down-the-wire updates need the corporate hose.</p>
+<p>While waiting for my machine to be back on its feet, my thoughts wandered around about the backup routine, the tools I&rsquo;ve been using, and our pleasant stay at the Tamara. Then I remembered merging a pull request from a contributor, while still on vacation, who wrote a helpful <code>Makefile</code> for my repo. Inspired by this, and by <a href="http://matthias-endler.de/2017/makefiles/" title="Afraid of Makefiles? Don't be! - Matthias Endler">Endler&rsquo;s wonderful post</a>, I thought of making one for all my backup/restore routines too, which would simplify my scattered backup shell scripts into just one <code>Makefile</code>. So, I <a href="https://gist.github.com/ckunte/d57ed8ae8c13315416ac22b83ba1ac7c" title="My Makefile for backups">wrote one</a> this week.</p>
+<p><strong>Note:</strong> <code>Makefile</code> is fussy about its format: (a) Tabs only (no spaces!) of indent-size 4; and (b) No in-line comments to ensure predictable behaviour.</p>
+<p>Now instead of running different shell scripts, I just have to run <code>make backup</code> (or <code>time make backup</code> to also know the time taken) or <code>make restore</code> (or <code>time make restore</code>) in the terminal and be done with it. The <a href="https://gist.github.com/ckunte/d57ed8ae8c13315416ac22b83ba1ac7c" title="My Makefile for backups">Makefile</a> also can run only select pre-defined folders, e.g., I can only choose to backup current projects with <code>make curr</code>, and so on. If I run only <code>make</code>, then it offers these options:</p>
+<pre><code>$ make
+Makefile for backup and restore routines
+
+Usage:
+    make backup    backup all mail projects references
+    make restore   restore all mail projects references
+    make mail      backup all mail
+    make proj      backup all projects
+    make curr      backup only current projects
+    make past      backup only past projects
+    make ref       backup all references
+    make cref      backup only current references
+    make pref      backup only past references
+</code></pre>
+<p>With <code>time</code> option (as in <code>time make backup</code>), <code>5:44.57</code> in the example below is the real (clock) time (listed in mm:ss.ms in this example) the job takes to complete.</p>
+<pre><code>sent 1,382,904,905 bytes  received 118 bytes  4,014,238.09 bytes/sec
+total size is 4,753,411,072  speedup is 3.44
+make mail  17.20s user 48.51s system 19% cpu 5:44.57 total
+</code></pre>
+<p>This downtime gave me a pause, and an opportunity to <a href="https://en.wikipedia.org/wiki/Make_(software)">make</a> my workflow simpler, which I think isn&rsquo;t bad at all.</p>
+<p><strong>Update:</strong> If one has symlinks with name same as the command in make file (e.g., if one has <em>curr</em> symlink in the same folder as <em>Makefile</em>), then <code>rsync</code> says <code>curr</code> is up to date, even if source and destination <code>curr</code> folders are not identical! To avoid this error, ensure symlink names are not identical to make commands in <em>Makefile</em>. Alternatively add it to <code>.PHONY</code> list.</p>
+  </article>
+  
+      <footer>
+        <span><a accesskey="j" title="Typhoon Melor" href="/2017/melor">&larr; Prev</a></span>
+        <span><a accesskey="k" title="NAS" href="/2017/nas">Next &rarr;</a></span>
+      </footer>
+
+  </main>
+</body>
+</html>

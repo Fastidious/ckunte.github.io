@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+  <title>ckunte.net: Binary</title>
+  <meta name="description" content="Pay attention, you may learn a thing about how computers work." />
+  <meta name="author" content="Chetan Kunte" />
+  <link rel="apple-touch-icon-precomposed" href="/img/apple-touch-icon.png" />
+  <link rel="canonical" href="/2015/binary" />
+  <link rel="stylesheet" href="/css/plain.css" type="text/css" />
+  <script src="/css/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css" integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+  <!-- The loading of KaTeX is deferred to speed up page rendering -->
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js" integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp" crossorigin="anonymous"></script>
+  <!-- To automatically render math in text elements, include the auto-render extension: -->
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+</head>
+<body>
+  <main>
+<header>
+  <a accesskey="/" href="/"><img alt="/" class="logo" src="/img/apple-touch-icon.png" width="64" height="64"></a>
+</header>
+  
+  
+  <article>
+  	<h1>Binary</h1>
+  	<time datetime="2015-09-18 20:22">September 18, 2015</time>
+  	<p>While kids stayed at home due to haze during first half of the week, the school thoughtfully decided they&rsquo;d give enough homework to keep them busy. Here&rsquo;s one my younger daughter (Year 7) received on <a href="http://nrich.maths.org/1368" title="Learn about Number Bases">bases</a>. She was given these digits to decipher:</p>
+<pre><code>10 1001 1110 1 10010 11001
+</code></pre>
+<p>She has just started on bases at school, and needed a clue. For a given assignment, she posted a couple of questions on school portal:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Conversation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kid</td>
+<td>Hang on, I don&rsquo;t really get it&hellip;are we supposed to use a code or something?</td>
+</tr>
+<tr>
+<td>Teacher</td>
+<td>It is not meant to be easy! And think about the question &ndash; it is a code and you have to translate it!</td>
+</tr>
+<tr>
+<td>Kid</td>
+<td>Is it a number or a word?</td>
+</tr>
+<tr>
+<td>Teacher</td>
+<td>Shall I just tell you the answer? Remember, it is meant to be hard!</td>
+</tr>
+</tbody>
+</table>
+<p>At this point the puzzle had our full attention. Given that they are all 0s and 1s, we figured these correspond to base 2, which in turn are realized as decimals (or base 10) from a progression of 2<sup>x</sup>.</p>
+<h2>The notation system for different bases</h2>
+<p><a href="http://mathworld.wolfram.com/Binary.html" title="Binary -- from Wolfram MathWorld">Base 2 notation system</a> uses only 0s and 1s; <a href="http://mathworld.wolfram.com/Ternary.html" title="Ternary -- from Wolfram MathWorld">base 3</a> uses only 0s, 1s, and 2s; <a href="http://mathworld.wolfram.com/Quaternary.html" title="Quaternary -- from Wolfram MathWorld">base 4</a> uses only 0s, 1s, 2s, and 3s; and so on. Similarly, <a href="http://mathworld.wolfram.com/Decimal.html" title="Decimal -- from Wolfram MathWorld">base 10</a> would use all unit numbers from 0 to 9 &mdash; hence their respective base names.</p>
+<h2>Solution</h2>
+<p>Once base was known, she began slotting in these numbers in a table by their order of units, tens, hundreds, and so on, as below.</p>
+<pre><code>16  8   4   2   1   BASE 10       
+            1   0   = 2
+    1   0   0   1   = 8 + 1 = 9
+    1   1   1   0   = 8 + 4 + 2 = 14
+                1   = 1
+1   0   0   1   0   = 16 + 2 = 18
+1   1   0   0   1   = 16 + 8 + 1 = 25
+</code></pre>
+<h2>Base 2 to Base 10 using a tool</h2>
+<p>We could well have used a tool to translate from base 2 to base 10, but felt it was important to learn how to convert manually first. <a href="http://calca.io">Calca</a> understands <code>0b</code> prefixed numbers as binary, and can be used thus &mdash; as a means to verify results:</p>
+<pre><code>   0b10 in dec =&gt; 2
+ 0b1001 in dec =&gt; 9
+ 0b1110 in dec =&gt; 14
+    0b1 in dec =&gt; 1
+0b10010 in dec =&gt; 18
+0b11001 in dec =&gt; 25
+</code></pre>
+<h2>Deciphering the answer</h2>
+<p>Half way through these numbers, she exclaimed, &ldquo;I know what this actually means. The 2nd of alphabets is <code>B</code>, 9th is <code>I</code>, 14th is&hellip;&rdquo;</p>
+<pre><code>10 1001 1110 1 10010 11001  &lt;- Base 2 values
+ 2    9   14 1    18    25  &lt;- Base 10 values
+ B    I    N A     R     Y  &lt;- Mapping alphabets
+</code></pre>
+<p>Hooray! Neat, yes?</p>
+  </article>
+  
+      <footer>
+        <span><a accesskey="j" title="Mapping dynamics" href="/2015/reactions">&larr; Prev</a></span>
+        <span><a accesskey="k" title="Offshore crane" href="/2016/crane">Next &rarr;</a></span>
+      </footer>
+
+  </main>
+</body>
+</html>
